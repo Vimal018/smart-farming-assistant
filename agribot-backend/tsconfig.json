@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                     // ES6 is a good target for modern JavaScript
+    "module": "CommonJS",                 // CommonJS module system is the standard for Node.js
+    "outDir": "./dist",                   // Output directory for compiled files
+    "rootDir": "./src",                   // Root directory for source files
+    "noImplicitAny": false,               // Enable all strict type-checking options
+    "esModuleInterop": true,              // Enables default imports for modules like `express`
+    "skipLibCheck": true,                 // Skip type checking of declaration files for faster builds
+    "forceConsistentCasingInFileNames": true, // Ensure file names are consistent across the project
+    "resolveJsonModule": true             // Allow importing of `.json` files as modules
+  },
+  "include": ["src/**/*"],                // Include all files in the src directory
+  "exclude": ["node_modules"]            // Exclude node_modules from being compiled
+ 
+}
