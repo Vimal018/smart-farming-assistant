@@ -1,18 +1,18 @@
 # 🌾 Smart Agricultural Assistant
 
-The **Smart Agricultural Assistant** is an intelligent farming companion designed to help small-scale farmers with soil testing, crop disease detection, pest management, crop recommendations, and government farming schemes. With AI integration and multilingual support, it empowers farmers to make data-driven decisions and improve productivity.
+The **Smart Agricultural Assistant** is a full-stack AI-powered solution built to support small-scale farmers. It provides real-time tools for crop disease detection, pest identification, soil classification, crop recommendations, and local farming schemes — with multi-language support and an intelligent AI chatbot interface.
 
 ---
 
 ## 🚀 Features
 
-- 🧪 **Soil Classification** – Analyze soil types and conditions for better crop planning
-- 🌿 **Crop Disease Detection** – Detect diseases from leaf images using AI
-- 📈 **Crop Recommendations** – Suggest the best crops based on soil & season
-- 📰 **Farming Schemes** – Display local government aids, schemes, and subsidies
-- 🌐 **Multi-language Support** – English and Tamil
-- 🔊 **Voice Interaction** – Text-to-Speech & Speech-to-Text integration
-- 🤖 **AI Chatbot** – Interactive assistant for farming queries
+- 🧪 Soil Classification based on user input and region
+- 🌾 AI-based Crop Disease Detection (image input)
+- 📋 Government Scheme & Subsidy Info
+- 🌱 Intelligent Crop Recommendation System
+- 🤖 AI Chatbot with voice and text capabilities
+- 🌐 Language toggle: English ↔ Tamil
+- 🔊 Text-to-Speech replies & 🎤 Speech-to-Text input
 
 ---
 
@@ -20,20 +20,26 @@ The **Smart Agricultural Assistant** is an intelligent farming companion designe
 
 ### Frontend
 - **React.js** with **TypeScript**
-- **Tailwind CSS** and **shadcn/ui**
-- **Clerk** for authentication
-- **Chart.js / Recharts** for data visualizations
+- **Tailwind CSS** for responsive design
+- **shadcn/ui** for component styling
 
 ### Backend
-- **Flask (Python)** – For AI processing and model predictions
-- **Node.js + TypeScript** – For routing and integration
-- **Nhost (GraphQL)** – For database and authentication
-- **Prisma + PostgreSQL** – For data modeling
+- **Node.js + Express.js** – REST API development
+- **MongoDB** – Database for storing user inputs, queries, and crop info
+- **Flask (Python)** – AI server for disease detection, soil classification, and crop recommendation
+- **Mongoose** – ODM for MongoDB in Node.js
 
-### AI & Automation
-- **n8n** – Workflow automation
-- **OpenRouter / OpenAI** – Sentiment & summarization models
-- **Custom CNN Models** – Crop disease & pest detection
+---
+
+## 📂 Folder Structure
+
+```
+smart-farming-assistant/
+├── agribot-frontend/      # React + Tailwind frontend
+├── agribot-backend/       # Express.js backend with MongoDB
+├── flask-ai-server/       # Python AI/ML model backend
+└── README.md
+```
 
 ---
 
@@ -44,69 +50,38 @@ The **Smart Agricultural Assistant** is an intelligent farming companion designe
 git clone https://github.com/Vimal018/smart-farming-assistant.git
 cd smart-farming-assistant
 
-# 2. Install frontend dependencies
+# 2. Setup frontend
 cd agribot-frontend
 npm install
 npm run dev
 
-# 3. Install backend dependencies
+# 3. Setup backend
 cd ../agribot-backend
 npm install
-npm run dev  # Or use nodemon
+npm run dev
 
-# 4. (Optional) Run Flask AI server
-cd ../ai-server
+# 4. Setup AI model server (Flask)
+cd ../flask-ai-server
 pip install -r requirements.txt
 python app.py
 ```
 
 ---
 
-## 📂 Folder Structure
+## 🌐 Multi-language Support
 
-```
-smart-farming-assistant/
-│
-├── agribot-frontend/      # React + Tailwind frontend
-├── agribot-backend/       # Node/TypeScript backend
-├── ai-server/             # Python Flask server for AI
-└── README.md
-```
+- Interface toggle between **English** and **Tamil**
+- **Speech recognition** auto-detects spoken language
+- **AI chatbot replies** in selected language using text-to-speech
 
 ---
 
-## 📸 Screenshots
+## ✅ Future Enhancements
 
-_Add screenshots or demo video link here._
-
----
-
-## 🧠 Future Enhancements
-
-- 🌦️ Weather integration
-- 🧾 PDF report generation
-- 📊 Yield prediction using ML
-- 💬 WhatsApp chatbot integration
+- Weather integration (based on district)
+- Yield prediction models
+- More language support (Hindi, Telugu, etc.)
+- Mobile-friendly PWA support
+- PDF generation for reports
 
 ---
-
-## 🤝 Contributors
-
-- [Vimal018](https://github.com/Vimal018) – Full-Stack Developer
-- Team Members – [Add your teammates here]
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
-```
-
----
-
-Let me know if you'd like to:
-- Add demo links or deployment info
-- Translate the README (Tamil version)
-- Generate badges (like GitHub stars, tech used, etc.)
-
-Want me to save this to a file you can download?
