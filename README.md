@@ -6,9 +6,8 @@ The **Smart Agricultural Assistant** is an intelligent farming companion designe
 
 ## 🚀 Features
 
-- 🧪 **Soil Testing** – Analyze soil types and conditions for better crop planning
+- 🧪 **Soil Classification** – Analyze soil types and conditions for better crop planning
 - 🌿 **Crop Disease Detection** – Detect diseases from leaf images using AI
-- 🐛 **Pest Management** – Identify common pests and get solutions
 - 📈 **Crop Recommendations** – Suggest the best crops based on soil & season
 - 📰 **Farming Schemes** – Display local government aids, schemes, and subsidies
 - 🌐 **Multi-language Support** – English and Tamil
