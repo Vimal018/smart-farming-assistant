@@ -4,15 +4,15 @@ import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../LanguageContext";
 import { translateText } from "../utils/translateText";
 import { useEffect, useState } from "react";
-import { Button } from "../components/ui/button";
-import { Switch } from "../components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "../components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 const Navbar = () => {
@@ -51,19 +51,19 @@ const Navbar = () => {
         isScrolled && "shadow-md"
       )}
     >
-      <div className="container flex h-16 items-center justify-between">
-        <Link 
-          to="/" 
-          className="flex items-center space-x-2 group"
-        >
+      <div className="container mx-auto flex h-16 items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="flex items-center space-x-2 group">
           <span className="relative font-bold text-2xl bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent transition-transform duration-300 group-hover:scale-105">
             {translatedTitle}
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 transition-all duration-300 group-hover:w-full" />
           </span>
         </Link>
-        
-        <div className="flex items-center gap-4">
-          {/* Language Selection */}
+
+        {/* Right Side Actions */}
+        <div className="flex items-center space-x-4">
+          
+          {/* Language Selector */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
@@ -90,8 +90,8 @@ const Navbar = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Theme Toggle Switch */}
-          <div className="flex items-center gap-2">
+          {/* Theme Toggle */}
+          <div className="flex items-center space-x-2">
             <Sun className="h-4 w-4 text-yellow-500" />
             <Switch
               checked={theme === "dark"}
@@ -101,7 +101,7 @@ const Navbar = () => {
             <Moon className="h-4 w-4 text-gray-500" />
           </div>
 
-          {/* User Profile */}
+          {/* User Auth */}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -150,13 +150,8 @@ const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                asChild 
-                className="hover:bg-green-50 dark:hover:bg-green-900/20"
-              >
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" asChild className="hover:bg-green-50 dark:hover:bg-green-900/20">
                 <Link to="/login" className="flex items-center gap-2">
                   <LogIn className="h-5 w-5" />
                   Login

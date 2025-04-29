@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "../LanguageContext";
 import { translateText } from "../utils/translateText";
+import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Loader, Upload } from "lucide-react";
+import SoilClassificationResult from "../components/SoilClassificationResult";
 
 const SoilClassification: React.FC = () => {
   const { language } = useLanguage();
@@ -109,87 +113,89 @@ const SoilClassification: React.FC = () => {
   
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-lg mx-auto">
-      <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">
-        {translations.title}
-      </h2>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="border-2 border-dashed p-4 rounded-lg bg-gray-100 dark:bg-gray-800">
-          <label className="block text-lg text-gray-800 dark:text-gray-300">
-            {translations.label}
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="hidden"
-            id="fileInput"
-          />
-          <label
-            htmlFor="fileInput"
-            className="cursor-pointer mt-2 block border bg-white dark:bg-gray-700 px-4 py-2 rounded-md text-center text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-          >
-            📷 {selectedImage ? selectedImage.name : "Choose File"}
-          </label>
-          {previewImage && (
-            <div className="mt-4">
-              <img
-                src={previewImage}
-                alt="Preview"
-                className="w-full h-40 object-cover rounded-md border"
-              />
-            </div>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          className={`w-full py-2 rounded-md text-white font-semibold transition 
-          ${isLoading ? "bg-gray-500 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"}`}
-          disabled={isLoading}
-        >
-          {isLoading ? "⏳ " + translations.processing : "🌱 " + translations.button}
-        </button>
-      </form>
-
-      {result && (
-        <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow">
-          <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
-            🌿 {translations.result}
-          </h3>
-          <p className="text-lg font-bold text-green-700 dark:text-green-300 mb-2">
-            🧪 Soil Type: {result.soil_type}
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-green-950/30 dark:to-background py-12 px-4">
+      <div className="max-w-5xl mx-auto space-y-8">
+        <div className="text-center space-y-4 animate-fade-in">
+          <h2 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">
+            {translations.title}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300">
+            Upload a soil image to analyze its properties and get crop recommendations
           </p>
-
-          <div className="mb-2">
-            <p className="font-semibold text-gray-800 dark:text-gray-200">✅ Pros:</p>
-            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
-              {result.pros.map((pro, index) => (
-                <li key={index}>{pro}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="mb-2">
-            <p className="font-semibold text-gray-800 dark:text-gray-200">⚠️ Cons:</p>
-            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
-              {result.cons.map((con, index) => (
-                <li key={index}>{con}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <p className="font-semibold text-gray-800 dark:text-gray-200">🌾 Recommended Crops:</p>
-            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
-              {result.recommended_crops.map((crop, index) => (
-                <li key={index}>{crop}</li>
-              ))}
-            </ul>
-          </div>
         </div>
-      )}
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <Card className="overflow-hidden bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-green-100 dark:border-green-900">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <label className="block text-lg font-medium text-gray-800 dark:text-gray-200">
+                    {translations.label}
+                  </label>
+                  <div
+                    className={`
+                      border-2 border-dashed border-green-300 dark:border-green-700 
+                      rounded-lg p-8 text-center hover:border-green-500 dark:hover:border-green-500 
+                      transition-all cursor-pointer bg-green-50/50 dark:bg-green-900/20
+                      ${selectedImage ? 'border-green-500' : ''}
+                    `}
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                      id="fileInput"
+                    />
+                    <label htmlFor="fileInput" className="cursor-pointer space-y-4 block">
+                      <Upload className="h-12 w-12 mx-auto text-green-600 dark:text-green-400" />
+                      <span className="block text-gray-600 dark:text-gray-300">
+                        {selectedImage ? selectedImage.name : "Click or drag to upload soil image"}
+                      </span>
+                    </label>
+                  </div>
+                  {previewImage && (
+                    <div className="mt-4 rounded-lg overflow-hidden shadow-lg animate-fade-in">
+                      <img
+                        src={previewImage}
+                        alt="Preview"
+                        className="w-full h-64 object-cover transition-transform hover:scale-105 duration-300"
+                      />
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {result && (
+              <div className="animate-fade-in">
+                <SoilClassificationResult result={result} resultLabel={translations.result} />
+              </div>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isLoading || !selectedImage}
+            className={`w-full h-12 text-lg font-semibold transition-all duration-300
+              ${
+                !selectedImage
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 shadow-md hover:shadow-lg'
+              }
+            `}
+          >
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <Loader className="h-5 w-5 animate-spin" />
+                {translations.processing}
+              </div>
+            ) : (
+              <span>{translations.button}</span>
+            )}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 };

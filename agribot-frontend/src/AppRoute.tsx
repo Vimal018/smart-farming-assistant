@@ -8,6 +8,8 @@ import SoilClassification from "./pages/SoilClassification";
 import CropDiseaseDetection from "./pages/CropDiseaseDetection";
 import FarmingSchemes from "./pages/FarmingSchemes";
 import CropRecommendation from './pages/CropRecommendation';
+import MarketAnalysis from './pages/MarketAnalysis';
+import SeasonalCalendar from './pages/SeasonalCalendar';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -43,6 +45,8 @@ const AppRoutes = () => {
             <Route path="/crop-disease-detection" element={<><Navbar /><CropDiseaseDetection /></>} />
             <Route path="/farming-schemes" element={<><Navbar /><FarmingSchemes /></>} />
             <Route path="/crop-recommendation" element={<><Navbar /><CropRecommendation /></>} />
+            <Route path="/market-analysis" element={<><Navbar /><MarketAnalysis /></>} />
+            <Route path="/seasonal-calendar" element={<><Navbar /><SeasonalCalendar /></>} />
           </Route>
 
           {/* Redirect unknown routes */}

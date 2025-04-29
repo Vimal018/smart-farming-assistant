@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useLanguage } from "../LanguageContext";
 import { translateText } from "../utils/translateText";
-import { ImageIcon, Loader2, AlertTriangle } from "lucide-react";
+import { ImageIcon, Loader2, AlertTriangle, Upload } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert"; // Adjust the path based on your project structure
+import DiseaseDetectionResult from "@/components/DiseaseDetectionResult";
 
 interface DetectionResult {
   confidence: number;
@@ -104,74 +107,97 @@ const CropDiseaseDetection: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-4xl font-bold mb-8 text-center text-primary">{translatedTitle}</h1>
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-green-950/30 dark:to-background py-12 px-4">
+      <div className="container mx-auto max-w-6xl">
+        <div className="text-center space-y-4 mb-10 animate-fade-in">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white">
+            {translatedTitle}
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Upload a photo of your plant to detect potential diseases and get prevention advice
+          </p>
+        </div>
 
-      <Card className="p-6 shadow-xl space-y-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-lg font-medium mb-2">{translatedLabel}</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-            />
-            {preview && (
-              <div className="mt-4 flex flex-col items-center">
-                <img
-                  src={preview}
-                  alt="Selected plant"
-                  className="w-72 h-72 object-cover rounded-lg border border-muted shadow transition-all duration-500"
-                />
-                <p className="text-sm text-muted-foreground mt-2 text-center">
-                  Preview of the uploaded plant image
-                </p>
+        <div className="grid lg:grid-cols-2 gap-8">
+          <Card className="p-6 backdrop-blur-sm bg-white/50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="relative group">
+                <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-primary transition-colors">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <Upload className="mx-auto h-12 w-12 text-gray-400 group-hover:text-primary transition-colors" />
+                  <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                    {translatedLabel}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    Drag and drop or click to upload
+                  </p>
+                </div>
+              </div>
+
+              {preview && (
+                <div className="relative group rounded-lg overflow-hidden">
+                  <img
+                    src={preview}
+                    alt="Selected plant"
+                    className="w-full h-64 object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <p className="text-white text-sm">Click to change image</p>
+                  </div>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="animate-spin h-5 w-5" />
+                    {translatedProcessing}
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    <ImageIcon className="h-5 w-5" />
+                    {translatedButton}
+                  </span>
+                )}
+              </Button>
+            </form>
+
+            {error && (
+              <div className="mt-4 animate-fade-in">
+                <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
               </div>
             )}
-          </div>
+          </Card>
 
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <Loader2 className="animate-spin h-5 w-5" />
-                {translatedProcessing}
-              </span>
-            ) : (
-              translatedButton
+          <ScrollArea className="h-[600px] rounded-lg">
+            {result && !error && (
+              <div className="animate-fade-in">
+                <DiseaseDetectionResult
+                  result={result}
+                  translatedLabels={{
+                    result: translatedResult,
+                    predictedClass: translatedPredictedClass,
+                    confidence: translatedConfidence,
+                    advice: translatedAdvice,
+                  }}
+                />
+              </div>
             )}
-          </Button>
-        </form>
-
-        {/* Error Message */}
-        {error && (
-          <div className="mt-4 p-4 bg-red-100 text-red-800 border border-red-300 rounded-lg flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5" />
-            {error}
-          </div>
-        )}
-
-        {/* Result */}
-        {result && !error && (
-          <div className="p-4 border rounded-lg bg-green-50 text-green-800 border-green-300 dark:bg-green-900 dark:text-green-100 dark:border-green-700">
-            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-              <ImageIcon className="h-5 w-5" />
-              {translatedResult}
-            </h3>
-            <p>
-              <span className="font-medium">{translatedPredictedClass}:</span> {result.predicted_class}
-            </p>
-            <p>
-              <span className="font-medium">{translatedConfidence}:</span> {result.confidence.toFixed(2)}%
-            </p>
-            {result.prevention_advice && (
-              <p className="mt-3">
-                <span className="font-medium">{translatedAdvice}:</span> {result.prevention_advice}
-              </p>
-            )}
-          </div>
-        )}
-      </Card>
+          </ScrollArea>
+        </div>
+      </div>
     </div>
   );
 };

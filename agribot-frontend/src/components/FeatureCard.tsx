@@ -11,8 +11,8 @@ const FeatureCards: React.FC = () => {
       key: "soil_classification",
       text: "Soil Classification",
       icon: "🌱",
-      image: "src/images/soil.jpg", // Path from public folder
-      link: "/soil-classification", // The link for the feature
+      image: "src/images/soil.jpg",
+      link: "/soil-classification",
     },
     {
       key: "crop_disease",
@@ -35,7 +35,22 @@ const FeatureCards: React.FC = () => {
       image: "src/images/recommendation.jpg",
       link: "/crop-recommendation",
     },
+    {
+      key: "market_analysis",
+      text: "Market Analysis",
+      icon: "📈",
+      image: "src/images/market.jpg", // make sure this image exists
+      link: "/market-analysis",
+    },
+    {
+      key: "seasonal_calendar",
+      text: "Seasonal Calendar",
+      icon: "📅",
+      image: "src/images/seasonal.jpg", // make sure this image exists
+      link: "/seasonal-calendar",
+    },
   ];
+  
 
   const [translatedFeatures, setTranslatedFeatures] = useState<string[]>([]);
 

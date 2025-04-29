@@ -1,88 +1,56 @@
-import React from "react";
+import React from 'react';
 
-interface Props {
+interface CropRecommendationFormattedProps {
   recommendationText: string;
 }
 
-const CropRecommendationFormatted: React.FC<Props> = ({ recommendationText }) => {
-  const sections = recommendationText.split("\n\n");
+const CropRecommendationFormatted: React.FC<CropRecommendationFormattedProps> = ({ recommendationText }) => {
+  if (!recommendationText) {
+    return <p className="text-gray-500 italic">No recommendation available yet.</p>;
+  }
+
+  // Split the text into paragraphs
+  const paragraphs = recommendationText.split('\n\n').filter(p => p.trim());
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow space-y-6 text-gray-800">
-      {sections.map((section, i) => {
-        // Title block with location info
-        if (i === 0 && section.includes("📍 District")) {
-          return (
-            <div key={i} className="text-sm space-y-1">
-              {section.split("\n").map((line, idx) => (
-                <p key={idx}>{line}</p>
-              ))}
-            </div>
+    <div className="space-y-4">
+      {paragraphs.map((paragraph, index) => {
+        // Check if paragraph is a heading (starts with # or ##)
+        if (paragraph.startsWith('# ') || paragraph.startsWith('## ')) {
+          const headingLevel = paragraph.startsWith('# ') ? 'h3' : 'h4';
+          const headingText = paragraph.replace(/^#+ /, '');
+          
+          return React.createElement(
+            headingLevel, 
+            { 
+              key: index,
+              className: headingLevel === 'h3' 
+                ? 'text-xl font-bold text-gray-900 dark:text-white mt-6 mb-3' 
+                : 'text-lg font-bold text-gray-800 dark:text-gray-200 mt-5 mb-2'
+            }, 
+            headingText
           );
         }
-
-        // Recommended crops section
-        if (section.startsWith("🌾 Recommended Crops:")) {
+        
+        // Check if paragraph is a list (starts with - or *)
+        if (paragraph.includes('\n- ') || paragraph.includes('\n* ')) {
+          const listItems = paragraph.split(/\n[*-] /).filter(item => item.trim());
+          
           return (
-            <div key={i}>
-              <h3 className="text-lg font-semibold mb-1">🌾 Recommended Crops</h3>
-              <p className="text-sm">{section.replace("🌾 Recommended Crops:", "").trim()}</p>
-            </div>
-          );
-        }
-
-        // Top crops list
-        if (section.startsWith("**Top 3-4 Most Suitable Crops:**")) {
-          const lines = section.split("\n").slice(1);
-          return (
-            <div key={i}>
-              <h4 className="text-base font-semibold mb-2">✅ Top 3–4 Most Suitable Crops</h4>
-              <ul className="list-decimal ml-6 text-sm space-y-1">
-                {lines.map((line, idx) => (
-                  <li key={idx}>
-                    <span dangerouslySetInnerHTML={{ __html: line }} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        }
-
-        // Categorization heading
-        if (section.startsWith("**Categorization of Other Crops:**")) {
-          return (
-            <h4 key={i} className="text-base font-semibold">
-              🗂️ {section.replace("**", "").replace("**", "")}
-            </h4>
-          );
-        }
-
-        // Categorized crop bullet points
-        if (section.startsWith("* ")) {
-          return (
-            <ul key={i} className="list-disc ml-6 text-sm space-y-1">
-              {section.split("\n").map((item, idx) => (
-                <li key={idx}>{item.replace("* ", "")}</li>
+            <ul key={index} className="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
+              {listItems.map((item, itemIndex) => (
+                <li key={itemIndex}>{item}</li>
               ))}
             </ul>
           );
         }
-
-        // Important Note block
-        if (section.startsWith("**Important Note:**")) {
-          return (
-            <div
-              key={i}
-              className="text-sm bg-yellow-50 border-l-4 border-yellow-500 p-3 rounded-md"
-            >
-              <strong>📌 Important Note:</strong>{" "}
-              {section.replace("**Important Note:**", "").trim()}
-            </div>
-          );
-        }
-
-        // Fallback
-        return <p key={i} className="text-sm">{section}</p>;
+        
+        // Regular paragraph
+        return (
+          <p key={index} className="text-gray-700 dark:text-gray-300">
+            {paragraph}
+          </p>
+        );
       })}
     </div>
   );
