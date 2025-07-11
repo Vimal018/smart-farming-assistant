@@ -24,7 +24,7 @@ app.use(express.json()); // JSON body parser
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173", // Allow frontend
+    origin: ["http://localhost:5173",  "https://smart-farming-assistant-eta.vercel.app"], // Allow frontend
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow cookies/sessions
   })
