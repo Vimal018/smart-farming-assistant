@@ -1,0 +1,10 @@
+# Ignore model files
+model.h5
+soil_classifier.h5
+
+# Optional: Ignore any .h5 files
+*.h5
+
+# __pycache__ and temp files
+__pycache__/
+*.pyc
