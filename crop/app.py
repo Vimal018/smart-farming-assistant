@@ -16,13 +16,13 @@ import os
 
 load_dotenv()  # Loads variables from .env
 
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 app = Flask(__name__)
-
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 # Configure Gemini API
-genai.configure(api_key="GOOGLE_API_KEY")  # Replace with your actual API key
+genai.configure(api_key=GEMINI_API_KEY)  # Replace with your actual API key
 
 def gemini_chat(prompt: str) -> str:
     model = genai.GenerativeModel("gemini-1.5-flash")
