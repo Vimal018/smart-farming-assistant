@@ -7,49 +7,50 @@ const FeatureCards: React.FC = () => {
   const { language } = useLanguage();
 
   const features = [
-    {
-      key: "soil_classification",
-      text: "Soil Classification",
-      icon: "🌱",
-      image: "src/images/soil.jpg",
-      link: "/soil-classification",
-    },
-    {
-      key: "crop_disease",
-      text: "Crop Disease Detection",
-      icon: "🦠",
-      image: "src/images/disease.jpg",
-      link: "/crop-disease-detection",
-    },
-    {
-      key: "gov_schemes",
-      text: "Farming Schemes",
-      icon: "📜",
-      image: "src/images/schemes.jpg",
-      link: "/farming-schemes",
-    },
-    {
-      key: "crop_recommend",
-      text: "Crop Recommendation",
-      icon: "🌾",
-      image: "src/images/recommendation.jpg",
-      link: "/crop-recommendation",
-    },
-    {
-      key: "market_analysis",
-      text: "Market Analysis",
-      icon: "📈",
-      image: "src/images/market.jpg", // make sure this image exists
-      link: "/market-analysis",
-    },
-    {
-      key: "seasonal_calendar",
-      text: "Seasonal Calendar",
-      icon: "📅",
-      image: "src/images/seasonal.jpg", // make sure this image exists
-      link: "/seasonal-calendar",
-    },
-  ];
+  {
+    key: "soil_classification",
+    text: "Soil Classification",
+    icon: "🌱",
+    image: "/images/soil.jpg", // ✅ Correct path
+    link: "/soil-classification",
+  },
+  {
+    key: "crop_disease",
+    text: "Crop Disease Detection",
+    icon: "🦠",
+    image: "/images/disease.jpg",
+    link: "/crop-disease-detection",
+  },
+  {
+    key: "gov_schemes",
+    text: "Farming Schemes",
+    icon: "📜",
+    image: "/images/schemes.jpg",
+    link: "/farming-schemes",
+  },
+  {
+    key: "crop_recommend",
+    text: "Crop Recommendation",
+    icon: "🌾",
+    image: "/images/recommendation.jpg",
+    link: "/crop-recommendation",
+  },
+  {
+    key: "market_analysis",
+    text: "Market Analysis",
+    icon: "📈",
+    image: "/images/market.jpg",
+    link: "/market-analysis",
+  },
+  {
+    key: "seasonal_calendar",
+    text: "Seasonal Calendar",
+    icon: "📅",
+    image: "/images/seasonal.jpg",
+    link: "/seasonal-calendar",
+  },
+];
+
   
 
   const [translatedFeatures, setTranslatedFeatures] = useState<string[]>([]);
