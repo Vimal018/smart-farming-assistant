@@ -31,7 +31,7 @@ const CropDiseaseDetection: React.FC = () => {
   const [translatedPredictedClass, setTranslatedPredictedClass] = useState("Predicted Class");
   const [translatedConfidence, setTranslatedConfidence] = useState("Confidence");
   const [translatedAdvice, setTranslatedAdvice] = useState("Prevention Advice");
-  const [translatedError, setTranslatedError] = useState("Error analyzing image");
+  const [, setTranslatedError] = useState("Error analyzing image");
   const [translatedProcessing, setTranslatedProcessing] = useState("Analyzing...");
 
   useEffect(() => {
