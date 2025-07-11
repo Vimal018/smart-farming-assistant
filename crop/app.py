@@ -475,6 +475,10 @@ Be helpful and friendly.
     ai_response = openrouter_res.json()
     reply = ai_response["choices"][0]["message"]["content"]
     return jsonify({"reply": reply})
+
+@app.route("/", methods=["GET"])
+def home():
+    return "ML Server Running"
         
 if __name__ == '__main__':
     app.run(debug=True)
