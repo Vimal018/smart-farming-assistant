@@ -3,7 +3,7 @@ import { useLanguage } from "../LanguageContext";
 import { translateText } from "../utils/translateText";
 import CropRecommendationFormatted from "../components/CropRecommendationFormatted";
 import { Sprout, Home, ArrowDown, Search, Leaf, CalendarDays } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -25,12 +25,12 @@ const CropRecommendation = () => {
   const [district, setDistrict] = useState("");
   const [recommendation, setRecommendation] = useState<string | null>(null);
   const [translatedRecommendation, setTranslatedRecommendation] = useState<string | null>(null);
-  const [topCrops, setTopCrops] = useState<string[]>([]);
+  const [, setTopCrops] = useState<string[]>([]);
   const [translatedTopCrops, setTranslatedTopCrops] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [view, setView] = useState("form");
-  const [activeTab, setActiveTab] = useState("recommendations");
+  const [, setActiveTab] = useState("recommendations");
   const [translatedDistricts, setTranslatedDistricts] = useState(districtsList);
   const [translatedSoilTypes, setTranslatedSoilTypes] = useState(soilTypes);
 
@@ -159,7 +159,7 @@ const CropRecommendation = () => {
               <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="grid md:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <label className="block text-lg font-medium text-gray-800 dark:text-gray-200 mb-2 flex items-center">
+                    <label className="block text-lg font-medium text-gray-800 dark:text-gray-200 mb-2 items-center">
                       <Leaf className="h-5 w-5 mr-2 text-green-600 dark:text-green-400" />
                       {translations.soilLabel}
                     </label>
@@ -178,7 +178,7 @@ const CropRecommendation = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="block text-lg font-medium text-gray-800 dark:text-gray-200 mb-2 flex items-center">
+                    <label className="block text-lg font-medium text-gray-800 dark:text-gray-200 mb-2 items-center">
                       <CalendarDays className="h-5 w-5 mr-2 text-green-600 dark:text-green-400" />
                       {translations.districtLabel}
                     </label>

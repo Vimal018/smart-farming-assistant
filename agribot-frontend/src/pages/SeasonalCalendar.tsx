@@ -1,11 +1,9 @@
-import { useState, useEffect, Key, ReactElement, ReactNode } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useLanguage } from "../LanguageContext";
 import { translateText } from "../utils/translateText";
 import { CalendarDays, Leaf, Sunrise, Droplet, Sprout } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 // List of districts and soil types
@@ -24,13 +22,6 @@ const soilTypes = [
 ];
 
 // Define interface for seasonal data
-interface SeasonalData {
-  crop: string;
-  sowing: string;
-  growing: string;
-  harvesting: string;
-  waterNeeds: string;
-}
 
 interface Crop {
   name: ReactNode;

@@ -49,7 +49,7 @@ const MarketAnalysis = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [translatedDistricts, setTranslatedDistricts] = useState(districtsList);
-  const [translatedSoilTypes, setTranslatedSoilTypes] = useState(soilTypes);
+  const [, setTranslatedSoilTypes] = useState(soilTypes);
   const [cropsInput, setCropsInput] = useState("");
 
   const [translations, setTranslations] = useState({
