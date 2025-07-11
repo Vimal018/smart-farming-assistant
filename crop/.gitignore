@@ -8,3 +8,6 @@ soil_classifier.h5
 # __pycache__ and temp files
 __pycache__/
 *.pyc
+# Environment files
+.env
+.env.*

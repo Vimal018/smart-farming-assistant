@@ -11,11 +11,18 @@ import re
 import traceback
 import json
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Loads variables from .env
+
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 app = Flask(__name__)
 
 # Configure Gemini API
-genai.configure(api_key="AIzaSyCFCYZ1G_o-fVTJnfmNNv3GHBlWw1ZzhzQ")  # Replace with your actual API key
+genai.configure(api_key="GOOGLE_API_KEY")  # Replace with your actual API key
 
 def gemini_chat(prompt: str) -> str:
     model = genai.GenerativeModel("gemini-1.5-flash")
@@ -453,7 +460,7 @@ Be helpful and friendly.
     openrouter_res = requests.post(
         "https://openrouter.ai/api/v1/chat/completions",
         headers={
-            "Authorization": f"Bearer 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",
+            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
             "Content-Type": "application/json"
         },
         json={
