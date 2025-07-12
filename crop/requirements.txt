@@ -10,3 +10,4 @@ requests
 google-generativeai
 gunicorn
 gdown
+keras==2.15.0

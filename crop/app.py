@@ -50,7 +50,13 @@ SOIL_MODEL_PATH = "soil_classifier.h5"
 # Download models if not present
 if not os.path.exists(CROP_MODEL_PATH):
     print("🔽 Downloading crop disease model...")
-    gdown.download(f"https://drive.google.com/uc?id={CROP_MODEL_ID}", CROP_MODEL_PATH, quiet=False)
+    gdown.download(f"https://drive.google.com/uc?id={CROP_MODEL_ID}", "model.h5", quiet=False)
+
+    # Convert old model to new format
+    print("🔁 Converting crop model to Keras v3 format...")
+    old_model = load_model("model.h5", compile=False)
+    old_model.save(CROP_MODEL_PATH)  # Save in new Keras format
+    os.remove("model.h5")  # Optional: clean up the old file
 
 if not os.path.exists(SOIL_MODEL_PATH):
     print("🔽 Downloading soil classifier model...")
