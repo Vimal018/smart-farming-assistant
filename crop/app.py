@@ -33,6 +33,12 @@ def gemini_chat(prompt: str) -> str:
 
 from tensorflow.keras.models import load_model
 
+# Load old .h5 model (must exist locally)
+model = load_model("model.h5", compile=False)
+
+# Save in the new .keras format
+model.save("model_new.keras")
+
 # File IDs from Google Drive
 CROP_MODEL_ID = "1kllcqv70LWzBanV3TN5dUT4NkbHewZzN"
 SOIL_MODEL_ID = "18ZrIkqzKXympq5RDv9zuV9VQ9yZv_23Q"

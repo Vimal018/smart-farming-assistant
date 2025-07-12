@@ -1,7 +1,7 @@
 # Ignore model files
 model.h5
 soil_classifier.h5
-
+model_new.keras
 # Optional: Ignore any .h5 files
 *.h5
 
