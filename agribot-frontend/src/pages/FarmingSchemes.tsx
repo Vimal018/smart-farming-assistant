@@ -25,7 +25,7 @@ interface Scheme {
         "Aadhaar Card", "Bank account details", "Palm Jaggery Cooperative Society card", "Palm tree climber license"
       ],
       department: "Department of Agriculture and Farmers Welfare, Government of Tamil Nadu",
-      image: "src/images/palm.jpg"
+      image: "/images/palm.jpg"
     },
     {
       title: "Chief Minister Dryland Development Mission",
@@ -39,7 +39,7 @@ interface Scheme {
         "CIBIL Report"
       ],
       department: "Department of Agriculture and Farmers Welfare, Government of Tamil Nadu",
-      image: "src/images/dryland.jpg"
+      image: "/images/dryland.jpg"
     },
     {
       title: "Chief Minister Solar Powered Pump Set",
@@ -51,7 +51,7 @@ interface Scheme {
         "Micro-irrigation system proof"
       ],
       department: "Department of Agriculture and Farmers Welfare, Government of Tamil Nadu",
-      image: "src/images/solar.jpg"
+      image: "/images/solar.jpg"
     },
     {
       title: "Agriculture Infrastructure Fund",
@@ -63,7 +63,7 @@ interface Scheme {
         "Financial statements (if applicable)", "CIBIL Report"
       ],
       department: "Department of Agriculture, Cooperation & Farmers Welfare, Government of India",
-      image: "src/images/agrifund.jpg"
+      image: "/images/agrifund.jpg"
     },
     {
       title: "Pradhan Mantri Kaushal Vikas Yojana",
@@ -74,7 +74,7 @@ interface Scheme {
         "Aadhaar Card", "Bank Account Details", "Education Certificates", "Enrollment in Authorized Training Center"
       ],
       department: "Ministry of Skill Development And Entrepreneurship",
-      image: "src/images/pmscheme.jpg"
+      image: "/images/pmscheme.jpg"
     },
     {
       title: "Swamitva Yojana",
@@ -85,7 +85,7 @@ interface Scheme {
         "Aadhaar Card", "Land Ownership Proof", "Village Panchayat Approval", "Survey Records"
       ],
       department: "Ministry of Panchayati Raj, Government of India",
-      image: "src/images/drone.jpg"
+      image: "/images/drone.jpg"
     },
     {
       title: "Kisan Credit Card",
@@ -96,7 +96,7 @@ interface Scheme {
         "PAN Card", "Aadhaar", "Land ownership proof", "Bank account details"
       ],
       department: "Ministry of Agriculture and Farmers Welfare",
-      image: "src/images/farmer.jpg"
+      image: "/images/farmer.jpg"
     },
     {
       title: "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
@@ -107,7 +107,7 @@ interface Scheme {
         "Aadhaar Card", "Bank Account Details", "Land Ownership Proof"
       ],
       department: "Department of Agriculture and Farmers Welfare, Government of India",
-      image: "src/images/pmkisan.jpg"
+      image: "/images/pmkisan.jpg"
     },
     {
       title: "Agriclinic and Agribusiness Centres Scheme (NABARD)",
@@ -118,7 +118,7 @@ interface Scheme {
         "Educational Qualification Certificates", "Aadhaar Card", "Bank Account Details", "Application Form"
       ],
       department: "National Bank for Agriculture and Rural Development (NABARD)",
-      image: "src/images/tractor.jpg"
+      image: "/images/tractor.jpg"
     }
   ];
   
