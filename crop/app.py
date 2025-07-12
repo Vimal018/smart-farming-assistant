@@ -31,26 +31,35 @@ def gemini_chat(prompt: str) -> str:
     return response.text.strip()
 
 
+from tensorflow.keras.models import load_model
+
 # File IDs from Google Drive
 CROP_MODEL_ID = "1kllcqv70LWzBanV3TN5dUT4NkbHewZzN"
 SOIL_MODEL_ID = "18ZrIkqzKXympq5RDv9zuV9VQ9yZv_23Q"
 
-CROP_MODEL_PATH = "model.h5"
+# File paths
+CROP_MODEL_PATH = "model_new.keras"
 SOIL_MODEL_PATH = "soil_classifier.h5"
 
-
-# Download and load the crop disease model if not already present
+# Download models if not present
 if not os.path.exists(CROP_MODEL_PATH):
     print("🔽 Downloading crop disease model...")
-    gdown.download(f"https://drive.google.com/uc?id={CROP_MODEL_ID}", CROP_MODEL_PATH, quiet=False)
+    gdown.download(f"https://drive.google.com/uc?id={CROP_MODEL_ID}", "model.h5", quiet=False)
+
+    # Convert old model to new format
+    print("🔁 Converting crop model to Keras v3 format...")
+    old_model = load_model("model.h5", compile=False)
+    old_model.save(CROP_MODEL_PATH)  # Save in new Keras format
+    os.remove("model.h5")  # Optional: clean up the old file
 
 if not os.path.exists(SOIL_MODEL_PATH):
     print("🔽 Downloading soil classifier model...")
     gdown.download(f"https://drive.google.com/uc?id={SOIL_MODEL_ID}", SOIL_MODEL_PATH, quiet=False)
 
-# Load AI models
-crop_disease_model = load_model("model.h5")  # Crop disease detection model
-soil_model = load_model("soil_classifier.h5")  # Soil classification model
+# Load models
+crop_disease_model = load_model(CROP_MODEL_PATH, compile=False)
+soil_model = load_model(SOIL_MODEL_PATH, compile=False)
+
 
 # Load datasets
 df_crops = pd.read_csv("district_soil_types.csv")  # Columns: District, Crop, Soil Type
