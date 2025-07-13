@@ -126,7 +126,7 @@ const MarketAnalysis = () => {
       setLoading(true);
       toast.info("Analyzing market data...");
       
-       const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+       const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
       const response = await fetch(`${backendUrl}/market-analysis`, {
         method: "POST",

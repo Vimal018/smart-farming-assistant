@@ -71,7 +71,7 @@ const CropDiseaseDetection: React.FC = () => {
     formData.append("image", image);
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
         const response = await fetch(`${backendUrl}/crop-disease-detection`, {
           method: "POST",

@@ -94,7 +94,7 @@ const CropRecommendation = () => {
 
     try {
       setLoading(true);
-       const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+       const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
         const response = await fetch(`${backendUrl}/crop-recommendation`, {
             method: "POST",
