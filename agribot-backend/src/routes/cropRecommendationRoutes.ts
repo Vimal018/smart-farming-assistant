@@ -11,9 +11,9 @@ router.post("/crop-recommendation", async (req: Request, res: Response): Promise
       return;
     }
 
-    const flaskAPI = "http://127.0.0.1:5000/recommend-crops"; // Flask API endpoint
+    const flaskAPI = process.env.FLASK_API_URL || "http://localhost:5000"; // Flask API endpoint
 
-    const response = await axios.post(flaskAPI, { soil_type: soilType, district });
+    const response = await axios.post(`${flaskAPI}/recommend-crops`, { soil_type: soilType, district });
 
     res.json(response.data);
   } catch (error) {
@@ -31,9 +31,9 @@ router.post("/seasonal-calendar", async (req: Request, res: Response): Promise<v
       return;
     }
 
-    const flaskAPI = "http://127.0.0.1:5000/seasonal-calendar"; // Flask API endpoint
+    const flaskAPI = process.env.FLASK_API_URL || "http://localhost:5000"; // Flask API endpoint
 
-    const response = await axios.post(flaskAPI, { 
+    const response = await axios.post(`${flaskAPI}/seasonal-calendar`, { 
       soil_type: soilType, 
       district,
       crops: crops || [] // Optional parameter
@@ -55,9 +55,9 @@ router.post("/market-analysis", async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    const flaskAPI = "http://127.0.0.1:5000/market-analysis"; // Flask API endpoint
+    const flaskAPI = process.env.FLASK_API_URL || "http://localhost:5000"; // Flask API endpoint
 
-    const response = await axios.post(flaskAPI, { 
+    const response = await axios.post(`${flaskAPI}/market-analysis`, { 
       district,
       crops
     });

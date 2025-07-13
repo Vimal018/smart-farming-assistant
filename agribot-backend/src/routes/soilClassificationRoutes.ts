@@ -15,13 +15,13 @@ router.post("/soil-classification", upload.single("image"), async (req: Request,
     }
 
     const filePath = req.file.path;
-    const flaskAPI = "http://127.0.0.1:5000/soil-predict";
+    const flaskAPI = process.env.FLASK_API_URL || "http://localhost:5000";
 
     const formData = new FormData();
     formData.append("image", fs.createReadStream(filePath)); // Change "file" to "image"
 
 
-    const response = await axios.post(flaskAPI, formData, {
+    const response = await axios.post(`${flaskAPI}/soil-predict`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

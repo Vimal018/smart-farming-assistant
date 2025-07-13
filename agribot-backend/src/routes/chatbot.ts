@@ -8,7 +8,10 @@ router.post("/chatbot", async (req, res): Promise<void> => {
     const { message } = req.body;
 
     // Call your Flask API here
-    const response = await axios.post("http://127.0.0.1:5000/api/chatbot", {
+    const flaskAPI = process.env.FLASK_API_URL || "http://localhost:5000"; // Flask API endpoint
+
+
+    const response = await axios.post(`${flaskAPI}/api/chatbot`, {
       message,
     });
 

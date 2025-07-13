@@ -17,13 +17,13 @@ router.post("/crop-disease-detection", upload.single("image"), async (req: Reque
     }
 
     const filePath = req.file.path; // Path of the uploaded image
-    const flaskAPI = "http://127.0.0.1:5000/predict"; // Flask API endpoint
+    const flaskAPI = process.env.FLASK_API_URL || "http://localhost:5000"; // Flask API endpoint
 
     // Send image to Flask server
     const formData = new FormData();
     formData.append("file", fs.createReadStream(filePath));
 
-    const response = await axios.post(flaskAPI, formData, {
+    const response = await axios.post(`${flaskAPI}/predict`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
