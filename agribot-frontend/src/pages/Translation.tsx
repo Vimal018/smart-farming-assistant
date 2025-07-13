@@ -18,7 +18,9 @@ const Translation = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:5000/translate", {
+       const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+  const response = await axios.post(`${backendUrl}/translate`, {
         text,
         targetLang,
       });

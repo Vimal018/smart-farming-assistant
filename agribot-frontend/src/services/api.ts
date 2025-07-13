@@ -1,9 +1,10 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000",
-  withCredentials: true, // Allows cookies if using sessions
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
+  withCredentials: true,
 });
+
 
 // Add Authorization token for requests (if needed)
 API.interceptors.request.use((config) => {

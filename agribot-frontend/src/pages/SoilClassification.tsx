@@ -71,7 +71,9 @@ const SoilClassification: React.FC = () => {
     setResult(null);
   
     try {
-      const response = await fetch("http://localhost:5000/soil-classification", {
+       const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+  const response = await fetch(`${backendUrl}/soil-classification`, {
         method: "POST",
         body: formData,
       });
