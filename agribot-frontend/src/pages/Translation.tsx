@@ -18,7 +18,7 @@ const Translation = () => {
     setError("");
 
     try {
-       const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+       const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   const response = await axios.post(`${backendUrl}/translate`, {
         text,
