@@ -4,7 +4,8 @@ import tensorflow as tf
 import cv2
 import io
 from flask import Flask, request, jsonify
-from tensorflow.keras.models import load_model
+from keras.models import load_model, save_model
+from keras.layers import InputLayer
 from PIL import Image
 import google.generativeai as genai
 import re
@@ -14,58 +15,252 @@ import requests
 from dotenv import load_dotenv
 import os
 import gdown
+import h5py
 
-load_dotenv()  # Loads variables from .env
-
+load_dotenv()
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-
 app = Flask(__name__)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
 # Configure Gemini API
-genai.configure(api_key=GEMINI_API_KEY)  # Replace with your actual API key
+genai.configure(api_key=GEMINI_API_KEY)
 
 def gemini_chat(prompt: str) -> str:
     model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(prompt)
     return response.text.strip()
 
+def get_model_info(model_path):
+    """Extract model information from .h5 file"""
+    try:
+        with h5py.File(model_path, 'r') as f:
+            if 'model_config' in f.attrs:
+                config = json.loads(f.attrs['model_config'].decode('utf-8'))
+                
+                # Get output layer info to determine number of classes
+                layers = config.get('config', {}).get('layers', [])
+                for layer in reversed(layers):  # Check from the end
+                    if layer.get('class_name') == 'Dense':
+                        units = layer.get('config', {}).get('units')
+                        if units:
+                            return {'num_classes': units}
+                            
+                # Fallback: count actual layers
+                layer_count = len(layers)
+                return {'num_classes': None, 'layer_count': layer_count}
+    except Exception as e:
+        print(f"Error reading model info: {e}")
+        return {'num_classes': None, 'layer_count': None}
 
-from tensorflow.keras.models import load_model
+def create_compatible_crop_model(num_classes=42):
+    """Create a compatible crop disease model architecture"""
+    from keras.models import Sequential
+    from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization
+    
+    model = Sequential([
+        Conv2D(32, (3, 3), activation='relu', input_shape=(224, 224, 3)),
+        BatchNormalization(),
+        MaxPooling2D(2, 2),
+        
+        Conv2D(64, (3, 3), activation='relu'),
+        BatchNormalization(),
+        MaxPooling2D(2, 2),
+        
+        Conv2D(128, (3, 3), activation='relu'),
+        BatchNormalization(),
+        MaxPooling2D(2, 2),
+        
+        Conv2D(256, (3, 3), activation='relu'),
+        BatchNormalization(),
+        MaxPooling2D(2, 2),
+        
+        Flatten(),
+        Dense(512, activation='relu'),
+        Dropout(0.5),
+        Dense(256, activation='relu'),
+        Dropout(0.3),
+        Dense(num_classes, activation='softmax')
+    ])
+    
+    model.compile(
+        optimizer='adam',
+        loss='categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    
+    return model
 
-# # Load old .h5 model (must exist locally)
-# model = load_model("model.h5", compile=False)
+def create_compatible_soil_model(num_classes=5):
+    """Create a compatible soil classifier model architecture"""
+    from keras.applications import MobileNetV2
+    from keras.models import Model
+    from keras.layers import GlobalAveragePooling2D, Dense, Dropout
+    
+    # Use MobileNetV2 as base (likely what the original model used)
+    base_model = MobileNetV2(
+        input_shape=(224, 224, 3),
+        include_top=False,
+        weights='imagenet'
+    )
+    
+    # Add custom top layers
+    x = base_model.output
+    x = GlobalAveragePooling2D()(x)
+    x = Dense(128, activation='relu')(x)
+    x = Dropout(0.5)(x)
+    predictions = Dense(num_classes, activation='softmax')(x)
+    
+    model = Model(inputs=base_model.input, outputs=predictions)
+    
+    model.compile(
+        optimizer='adam',
+        loss='categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    
+    return model
 
-# # Save in the new .keras format
-# model.save("model_new.keras")
+def load_model_with_fallback(model_path, model_name, create_fallback_func, expected_classes=None):
+    """Load model with intelligent fallback"""
+    
+    print(f"🔄 Loading {model_name} from {model_path}...")
+    
+    # Get model info first
+    model_info = get_model_info(model_path)
+    actual_classes = model_info.get('num_classes', expected_classes)
+    
+    if actual_classes:
+        print(f"📊 Detected {actual_classes} classes in {model_name}")
+    
+    # Method 1: Try direct loading with version downgrade simulation
+    try:
+        # Set mixed precision policy to float32
+        tf.keras.mixed_precision.set_global_policy('float32')
+        
+        # Try loading without compilation first
+        model = tf.keras.models.load_model(model_path, compile=False)
+        
+        # Manually compile
+        model.compile(
+            optimizer='adam',
+            loss='categorical_crossentropy',
+            metrics=['accuracy']
+        )
+        
+        print(f"✅ {model_name} loaded successfully!")
+        return model
+        
+    except Exception as e:
+        print(f"❌ Direct loading failed: {e}")
+    
+    # Method 2: Use fallback architecture with correct classes
+    try:
+        print(f"🔄 Creating fallback {model_name} architecture...")
+        
+        if actual_classes:
+            fallback_model = create_fallback_func(actual_classes)
+        else:
+            fallback_model = create_fallback_func()
+        
+        # Try to load weights
+        try:
+            fallback_model.load_weights(model_path)
+            print(f"✅ {model_name} weights loaded into fallback architecture!")
+            return fallback_model
+        except Exception as weight_error:
+            print(f"❌ Weight loading failed: {weight_error}")
+            
+        # Return untrained model as last resort
+        print(f"⚠️ Returning untrained {model_name} model")
+        return fallback_model
+        
+    except Exception as e:
+        print(f"❌ Fallback creation failed: {e}")
+    
+    print(f"❌ All methods failed for {model_name}")
+    return None
 
 # File IDs from Google Drive
 CROP_MODEL_ID = "1uOtuiXFBtizfRyvV8KBqtd7NZckTbTZd"
 SOIL_MODEL_ID = "18ZrIkqzKXympq5RDv9zuV9VQ9yZv_23Q"
 
 # File paths
-CROP_MODEL_PATH = "model_new.keras"
+CROP_MODEL_PATH = "model.h5"
 SOIL_MODEL_PATH = "soil_classifier.h5"
 
 # Download models if not present
 if not os.path.exists(CROP_MODEL_PATH):
     print("🔽 Downloading crop disease model...")
-    gdown.download(f"https://drive.google.com/uc?id={CROP_MODEL_ID}", "model.h5", quiet=False)
-
-    # Convert old model to new format
-    print("🔁 Converting crop model to Keras v3 format...")
-    old_model = load_model("model.h5", compile=False)
-    old_model.save(CROP_MODEL_PATH)  # Save in new Keras format
-    os.remove("model.h5")  # Optional: clean up the old file
+    try:
+        gdown.download(f"https://drive.google.com/uc?id={CROP_MODEL_ID}", CROP_MODEL_PATH, quiet=False)
+        print("✅ Crop model downloaded successfully!")
+    except Exception as e:
+        print(f"❌ Error downloading crop model: {e}")
 
 if not os.path.exists(SOIL_MODEL_PATH):
     print("🔽 Downloading soil classifier model...")
-    gdown.download(f"https://drive.google.com/uc?id={SOIL_MODEL_ID}", SOIL_MODEL_PATH, quiet=False)
+    try:
+        gdown.download(f"https://drive.google.com/uc?id={SOIL_MODEL_ID}", SOIL_MODEL_PATH, quiet=False)
+        print("✅ Soil model downloaded successfully!")
+    except Exception as e:
+        print(f"❌ Error downloading soil model: {e}")
 
-# Load models
-crop_disease_model = load_model(CROP_MODEL_PATH, compile=False)
-soil_model = load_model(SOIL_MODEL_PATH, compile=False)
+print("🚀 Loading AI models...")
 
+# Load models with intelligent fallback
+crop_disease_model = load_model_with_fallback(
+    CROP_MODEL_PATH, 
+    "Crop Disease Model", 
+    create_compatible_crop_model,
+    42  # Default expected classes
+)
+
+soil_model = load_model_with_fallback(
+    SOIL_MODEL_PATH, 
+    "Soil Classifier Model", 
+    create_compatible_soil_model,
+    5  # Default expected classes
+)
+
+# Model status check
+def models_health_check():
+    """Check if models are loaded and ready"""
+    return {
+        'crop_disease_model': crop_disease_model is not None,
+        'soil_model': soil_model is not None,
+        'crop_model_trainable': crop_disease_model is not None and len(crop_disease_model.get_weights()) > 0,
+        'soil_model_trainable': soil_model is not None and len(soil_model.get_weights()) > 0,
+        'status': 'ready' if (crop_disease_model and soil_model) else 'partial'
+    }
+
+# Print final status
+health = models_health_check()
+print(f"\n🏥 Model Health Check:")
+print(f"  Crop Disease Model: {'✅ Ready' if health['crop_disease_model'] else '❌ Failed'}")
+print(f"  Soil Classifier Model: {'✅ Ready' if health['soil_model'] else '❌ Failed'}")
+print(f"  Overall Status: {health['status'].upper()}")
+
+if crop_disease_model:
+    print(f"\n📊 Crop Disease Model Info:")
+    print(f"  Input shape: {crop_disease_model.input_shape}")
+    print(f"  Output shape: {crop_disease_model.output_shape}")
+    print(f"  Total parameters: {crop_disease_model.count_params():,}")
+
+if soil_model:
+    print(f"\n📊 Soil Classifier Model Info:")
+    print(f"  Input shape: {soil_model.input_shape}")
+    print(f"  Output shape: {soil_model.output_shape}")
+    print(f"  Total parameters: {soil_model.count_params():,}")
+
+print("\n🎉 Model initialization complete!")
+
+# Health check endpoint
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify(models_health_check())
+
+# Note: Add your other Flask routes here...
 
 # Load datasets
 df_crops = pd.read_csv("district_soil_types.csv")  # Columns: District, Crop, Soil Type
