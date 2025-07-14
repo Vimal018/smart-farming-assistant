@@ -161,7 +161,9 @@ export default function ChatBot() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/chatbot", {
+      const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+      const res = await fetch(`${backendUrl}/chatbot`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userInput, lang: language }),
