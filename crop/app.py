@@ -27,7 +27,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
 
 def gemini_chat(prompt: str) -> str:
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.0-flash")
     response = model.generate_content(prompt)
     return response.text.strip()
 
@@ -470,7 +470,7 @@ def recommend_crops():
         soil_moisture = district_info.iloc[0]["Soil Moisture (%)"]
         crop_problems = get_crop_problems(soil_type)
 
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.0-flash")
 
         prompt = (
             f"Given the {soil_type} soil in {district}, along with:\n"
